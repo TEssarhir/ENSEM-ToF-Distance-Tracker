@@ -6,7 +6,7 @@
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 
-// Constants
+//? Constants
 const char* ssid = "ssid";
 const char* password = "wifipw";
 const char *ssid_AP = "esp32tof";
@@ -20,7 +20,7 @@ const int DispNcount = 2;
 const int notifyNcount = 2;
 const int ds = 5; // 1 pt sur 5 donc 100 ms
 
-// Variables
+//? Variables
 bool SOFTAP = true;
 double T_distance[itmax];
 int it = 0;
@@ -39,28 +39,13 @@ volatile int Dispcount = 0;
 volatile int notifycount = 0;
 hw_timer_t *timer = NULL;
 
-// Objects
+//? Objects
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 VL53L0X_RangingMeasurementData_t measure;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
-// Function Prototypes
-void APWifiParam();
-void handleWebSocketMessage(void *arg, uint8_t *data, size_t len);
-void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
-void initWebSocket();
-String processor(const String& var);
-void notifyWSclient();
-String generateCSV();
-void IRAM_ATTR onTimer();
-String getFormattedDateTime();
-String getFile();
-String sendData();
-String sendDataArray();
-void initVar();
-void setup();
-void loop();
+//*---------------------------------------------------------------
 
 void APWifiParam() {
   Serial.println("Empty wifi Param from SPIFFS, use AP :");
@@ -130,16 +115,6 @@ void initWebSocket() {
   server.addHandler(&ws);
 }
 
-String processor(const String& var) {
-  Serial.println(var);
-  if (var == "STATE") {
-    return Flags.Running ? "Running" : "Stopped";
-  } else if (var == "Score") {
-    return String(Score);
-  }
-  return String();
-}
-
 void notifyWSclient() {
   String timeAndDistance = "temps " + String(temps, 2) + " distance " + String(dist, 2);
   ws.textAll(timeAndDistance);
@@ -201,8 +176,9 @@ void initVar() {
   Flags.DisplayConsole = 1;
   Dispcount = 0;
   notifycount = 0;
-  Score = 0;
 }
+
+//*---------------------------------------------------------------
 
 void setup() {
   Serial.begin(SERIAL_SPEED);
@@ -251,7 +227,7 @@ void setup() {
   }
   initWebSocket();
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(SPIFFS, "/index.html", String(), false, processor);
+    request->send(SPIFFS, "/index.html", String());
   });
   server.on("/data.csv", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/csv", generateCSV());
