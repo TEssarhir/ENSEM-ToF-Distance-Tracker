@@ -1,0 +1,42 @@
+html {
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+    h1 {
+        font-size: 1.8rem;
+        color: white;
+    }
+    h2 {
+        font-size: 1.5rem;
+        color: #143642;
+    }
+    .topnav {
+        overflow: hidden;
+        background-color: #143642;
+    }
+    body {
+        margin: 0;
+    }
+    .content {
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .card {
+        background-color: #F8F7F9;
+        box-shadow: 2px 2px 12px rgba(140, 140, 140, 0.5);
+        padding: 20px;
+    }
+    .metrics {
+        margin-top: 20px;
+        text-align: left;
+    }
+    .button {
+        padding: 10px 20px;
+        font-size: 18px;
+        color: white;
+        background-color: #0f8b8d;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+    }

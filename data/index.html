@@ -3,6 +3,7 @@
 <head lang="fr-FR">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
     <title>ESP32 Distance Tracker</title>
 </head>
 <body>
@@ -24,139 +25,6 @@
         <p><a href="/data.csv" class="button" target="_blank">Download CSV Data</a></p>
     </div>
 </div>
-
-<script>
-    var gateway = `ws://${window.location.hostname}/ws`;
-    var websocket;
-    var timeData = [];
-    var distanceData = [];
-    var updateInterval = 1000; // Updates every 1 second
-    var lastUpdate = Date.now();
-
-    window.addEventListener('load', onLoad);
-
-    function initWebSocket() {
-        console.log('Trying to open a WebSocket connection...');
-        websocket = new WebSocket(gateway);
-        websocket.onopen = onOpen;
-        websocket.onclose = onClose;
-        websocket.onmessage = onMessage;
-    }
-
-    function onOpen(event) {
-        console.log('WebSocket connection opened');
-        document.getElementById('status').textContent = "Connected";
-        document.getElementById('status').style.color = "green";
-    }
-
-    function onClose(event) {
-        console.log('WebSocket connection closed');
-        document.getElementById('status').textContent = "Disconnected";
-        document.getElementById('status').style.color = "red";
-        setTimeout(initWebSocket, 2000); // Retry connection after 2 seconds
-    }
-
-    function onMessage(event) {
-        console.log('WebSocket Data:', event.data);
-
-        var dataArray = event.data.split(" ");
-
-        // Parse time
-        if (dataArray.includes("temps")) {
-            var timeIndex = dataArray.indexOf("temps") + 1;
-            var timeValue = parseFloat(dataArray[timeIndex]);
-            document.getElementById('temps').innerHTML = `${timeValue.toFixed(2)} seconds`;
-            timeData.push(timeValue);
-        }
-
-        // Parse distance
-        if (dataArray.includes("distance")) {
-            var distanceIndex = dataArray.indexOf("distance") + 1;
-            var distanceValue = parseFloat(dataArray[distanceIndex]);
-            if (distanceValue === -1) {
-                document.getElementById('distance').innerHTML = `Out of Range`;
-                distanceData.push(null); // Push null for "Out of Range"
-            } else {
-                document.getElementById('distance').innerHTML = `${distanceValue.toFixed(2)} mm`;
-                distanceData.push(distanceValue);
-            }
-        }
-
-        // Limit the number of data points
-        if (timeData.length > 100) {
-            timeData.shift();
-            distanceData.shift();
-        }
-
-        // Update metrics
-        updateMetrics();
-    }
-
-    function onLoad(event) {
-        initWebSocket();
-    }
-
-    function updateMetrics() {
-        const validDistances = distanceData.filter(d => d !== null);
-        if (validDistances.length > 0) {
-            const maxDistance = Math.max(...validDistances);
-            const minDistance = Math.min(...validDistances);
-            const avgDistance = validDistances.reduce((a, b) => a + b, 0) / validDistances.length;
-
-            document.getElementById('maxDistance').innerHTML = `${maxDistance.toFixed(2)} mm`;
-            document.getElementById('minDistance').innerHTML = `${minDistance.toFixed(2)} mm`;
-            document.getElementById('avgDistance').innerHTML = `${avgDistance.toFixed(2)} mm`;
-        } else {
-            document.getElementById('maxDistance').innerHTML = `N/A`;
-            document.getElementById('minDistance').innerHTML = `N/A`;
-            document.getElementById('avgDistance').innerHTML = `N/A`;
-        }
-    }
-</script>
-
-<style>
-    html {
-        font-family: Arial, Helvetica, sans-serif;
-        text-align: center;
-    }
-    h1 {
-        font-size: 1.8rem;
-        color: white;
-    }
-    h2 {
-        font-size: 1.5rem;
-        color: #143642;
-    }
-    .topnav {
-        overflow: hidden;
-        background-color: #143642;
-    }
-    body {
-        margin: 0;
-    }
-    .content {
-        padding: 30px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    .card {
-        background-color: #F8F7F9;
-        box-shadow: 2px 2px 12px rgba(140, 140, 140, 0.5);
-        padding: 20px;
-    }
-    .metrics {
-        margin-top: 20px;
-        text-align: left;
-    }
-    .button {
-        padding: 10px 20px;
-        font-size: 18px;
-        color: white;
-        background-color: #0f8b8d;
-        text-decoration: none;
-        border: none;
-        border-radius: 5px;
-    }
-</style>
+<script src="script.js"></script>
 </body>
 </html>

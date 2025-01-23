@@ -229,6 +229,12 @@ void setup() {
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(SPIFFS, "/index.html", String());
   });
+  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){ // Serve the CSS file
+    request->send(SPIFFS, "/style.css", "text/css");
+  });
+  server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request){ // Serve the JavaScript file
+    request->send(SPIFFS, "/script.js", "application/javascript");
+  });
   server.on("/data.csv", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/csv", generateCSV());
   });
