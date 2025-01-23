@@ -41,6 +41,7 @@ hw_timer_t *timer = NULL;
 
 // Objects
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+VL53L0X_RangingMeasurementData_t measure;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
