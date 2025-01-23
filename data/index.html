@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ESP32 Distance Tracker</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="topnav">
@@ -16,7 +15,6 @@
         <p><strong>Status:</strong> <span id="status" style="color: red;">Disconnected</span></p>
         <p><strong>Time:</strong> <span id="temps">0.00 seconds</span></p>
         <p><strong>Distance:</strong> <span id="distance">N/A</span></p>
-        <canvas id="distanceChart" width="400" height="200"></canvas>
         <div class="metrics">
             <h3>Metrics</h3>
             <p><strong>Max Distance:</strong> <span id="maxDistance">N/A</span></p>
@@ -30,10 +28,9 @@
 <script>
     var gateway = `ws://${window.location.hostname}/ws`;
     var websocket;
-    var chart;
     var timeData = [];
     var distanceData = [];
-    var updateInterval = 1000; // Chart updates every 1 second
+    var updateInterval = 1000; // Updates every 1 second
     var lastUpdate = Date.now();
 
     window.addEventListener('load', onLoad);
@@ -85,18 +82,10 @@
             }
         }
 
-        // Limit the number of data points displayed on the chart
+        // Limit the number of data points
         if (timeData.length > 100) {
             timeData.shift();
             distanceData.shift();
-        }
-
-        // Update chart at throttled intervals
-        if (Date.now() - lastUpdate > updateInterval) {
-            lastUpdate = Date.now();
-            if (chart) {
-                chart.update();
-            }
         }
 
         // Update metrics
@@ -105,43 +94,6 @@
 
     function onLoad(event) {
         initWebSocket();
-        initChart();
-    }
-
-    function initChart() {
-        const ctx = document.getElementById('distanceChart').getContext('2d');
-        chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: timeData,
-                datasets: [{
-                    label: 'Distance (mm)',
-                    data: distanceData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.4,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Time (seconds)',
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Distance (mm)',
-                        },
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
     }
 
     function updateMetrics() {
