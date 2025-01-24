@@ -235,6 +235,9 @@ void setup() {
   server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request){ // Serve the JavaScript file
     request->send(SPIFFS, "/script.js", "application/javascript");
   });
+  server.on("/chart.js", HTTP_GET, [](AsyncWebServerRequest *request){ // Serve the JavaScript file
+    request->send(SPIFFS, "/chart.js", "application/javascript");
+  });
   server.on("/data.csv", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/csv", generateCSV());
   });

@@ -68,6 +68,49 @@ function onLoad(event) {
     initWebSocket();
 }
 
+function initChart() {
+    const ctx = document.getElementById('distanceChart').getContext('2d');
+    window.distanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [], // Time labels
+            datasets: [{
+                label: 'Distance',
+                data: [], // Distance data
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'second'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Distance (cm)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateChart(time, distance) {
+    window.distanceChart.data.labels.push(time);
+    window.distanceChart.data.datasets[0].data.push(distance);
+    window.distanceChart.update();
+}
+
 function updateMetrics() {
     const validDistances = distanceData.filter(d => d !== null);
     if (validDistances.length > 0) {

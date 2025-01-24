@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+    <script src="chart.js"></script>
     <title>ESP32 Distance Tracker</title>
 </head>
 <body>
@@ -23,6 +24,10 @@
             <p><strong>Average Distance:</strong> <span id="avgDistance">N/A</span></p>
         </div>
         <p><a href="/data.csv" class="button" target="_blank">Download CSV Data</a></p>
+    </div>
+    <div class="card">
+        <h2>Distance Chart</h2>
+        <canvas id="distanceChart"></canvas>
     </div>
 </div>
 <script src="script.js"></script>
